@@ -4,6 +4,8 @@ const AWS = require("aws-sdk");
 const PORT = process.env.PORT || 3001;
 const app = express();
 const cors = require("cors");
+const logger = require("morgan");
+const fs = require("fs");
 
 AWS.config.update({
   region: "eu-west-1",
@@ -22,7 +24,18 @@ const dbRead = async (params) => {
   return data;
 };
 
+// Middlewares
 app.use(cors());
+// app.use(require("morgan")("dev"));
+app.use(
+  logger(
+    ":remote-addr - :remote-user [:date[clf]] :method :url HTTP/:http-version :status :res[content-length] :referrer :user-agent",
+    {
+      stream: fs.createWriteStream("./access.log", { flags: "a" }),
+    }
+  )
+);
+app.use(logger("dev"));
 
 // Data comes from AWS Lambda
 app.get("/awstips", (req, res) => {
