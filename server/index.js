@@ -48,13 +48,10 @@ app.get("/awstips", (req, res) => {
 // This one works only when the code runs in EC2 instance
 app.get("/instance", (req, res) => {
   var meta = new AWS.MetadataService();
-  meta.request(
-    "http://169.254.169.254/latest/meta-data/instance-id",
-    (err, data) => {
-      console.log(data);
-      res.json(data);
-    }
-  );
+  meta.request("/latest/meta-data/instance-id", (err, data) => {
+    console.log(data);
+    res.json(data);
+  });
 });
 
 // Data comes from DynamoDB
