@@ -21,9 +21,14 @@ function App() {
   const [instance, setInstance] = React.useState(null);
 
   React.useEffect(() => {
-    fetch("/awstips")
-      .then((res) => res.json())
-      .then((data) => setAwsTips(data.tip));
+    fetch(process.env.REACT_APP_LB + "/awstips")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log("---->", data);
+        setAwsTips(data.message.tip);
+      });
   }, []);
 
   React.useEffect(() => {
